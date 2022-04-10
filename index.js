@@ -1,6 +1,6 @@
-//const fs = require('fs');
+const fs = require('fs')
 const inquirer = require('inquirer');
-//const generatePage = require('./src/page-template');
+const generatePage = require('./src/page-template.js');
 
 
  const promptEmployee = (teamData) => {
@@ -97,27 +97,24 @@ const inquirer = require('inquirer');
             default: false
          },
     ])
-
 .then( (data) => {
     teamData.push(data)
     if (data.confirmAddEmployee){
-        return promptEmployee(teamData)
+        return promptEmployee(teamData);
     } else {
-        return teamData
+        return teamData;
     }
+});
+};
 
-})
-
- }
-
-//const pageHTML = generatePage(data);
 
 promptEmployee()
-.then( teamData => {
-
-     console.log(teamData);
-//fs.writeFile('./index.html', pageHTML, err => {
-    //if (err) throw err;
-  
-   // console.log('Portfolio complete! Check out index.html to see the output!');
-});
+.then(teamData =>{
+    return generatePage(teamData)
+})
+.then( teamDataHTML=> 
+    fs.writeFile('./dist/index.html', teamDataHTML , err => {
+      if (err) throw new Error(err);
+       console.log('Page created! Check out index.html in this directory to see it!');
+     })
+    );
